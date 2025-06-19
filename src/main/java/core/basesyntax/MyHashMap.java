@@ -59,23 +59,24 @@ public class MyHashMap<K, V> implements MyMap<K, V> {
         Node<K, V> current = table[index];
         Node<K, V> newNode = new Node<>(key, value);
 
-        if (current != null) {
-            while (current != null) {
-                if (Objects.equals(current.key, newNode.key)) {
-                    current.value = value;
-                    return;
-                }
-                if (current.next == null) {
-                    current.next = newNode;
-                    size++;
-                } else {
-                    current = current.next;
-                }
-            }
-        } else {
+        if (current == null) {
             table[index] = newNode;
             size++;
+            return;
         }
+        while (current != null) {
+            if (Objects.equals(current.key, newNode.key)) {
+                current.value = value;
+                return;
+            }
+            if (current.next == null) {
+                break;
+            }
+            current = current.next;
+        }
+
+        current.next = newNode;
+        size++;
     }
 
     private int getIndex(K key) {
